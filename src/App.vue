@@ -51,10 +51,10 @@
   position: relative;
   width: 600px;
   height: 400px;
-  background: blue;
   top: 50%;
   left: 50%;
-  transform: translate(-50%,-50%)
+  transform: translate(-50%,-50%);
+  clip-path: url(product.svg#clip);
 }
 
 .slider {
@@ -81,6 +81,7 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
+  background: #212121
 }
 
 .user-image {
