@@ -23,21 +23,21 @@
     scale.value = 1 + (parseInt(target.value) - 150) / 100
   }
 
+  // https://stackoverflow.com/questions/19484707/how-can-i-make-an-svg-scale-with-its-parent-container
+
 </script>
 
 <template>
   <VueInfiniteViewer useWheelScroll=true class="view-infinite-viewer" :zoom="zoomFactor" @scroll="onScroll" @wheel="onScroll">
     <div class="viewport">
+      <div class="product-toolbar">
+        <input type="range" min="1" max="300" :value="scaleComputed" class="slider" id="myRange" :onInput="onZoom">
+      </div>
       <div class="product-container">
         <div class="image-wrapper">
           <VueDraggableResizable className="user-image" style="width:100%">
               <img ref="image" src="/iron-man.jpg" width="100%" :style="{ transform: `scale(${scale})`}"/>
           </VueDraggableResizable>
-        </div>
-
-
-        <div class="product-toolbar">
-          <input type="range" min="1" max="300" :value="scaleComputed" class="slider" id="myRange" :onChange="onZoom">
         </div>
       </div>
     </div>
@@ -54,7 +54,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
-  clip-path: url(product.svg#clip);
+  clip-path: url("/product.svg#mask");
 }
 
 .slider {
@@ -62,9 +62,6 @@
 }
 
 .product-toolbar {
-  position: absolute;
-  top: 100%;
-  width: 100%;
 }
 
 .box {
