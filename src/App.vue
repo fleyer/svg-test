@@ -47,6 +47,7 @@
 
 <style>
 
+
 .product-container {
   position: relative;
   width: 600px;
