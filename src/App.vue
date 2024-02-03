@@ -28,13 +28,18 @@
 </script>
 
 <template>
+  <div class="product-toolbar">
+    <div>
+      <input type="range" min="1" max="300" :value="scaleComputed" class="slider" id="myRange" :onInput="onZoom">
+    </div>
+  </div>
   <VueInfiniteViewer useWheelScroll=true class="view-infinite-viewer" :zoom="zoomFactor" @scroll="onScroll" @wheel="onScroll">
     <div class="viewport">
-      <div class="product-toolbar">
-        <input type="range" min="1" max="300" :value="scaleComputed" class="slider" id="myRange" :onInput="onZoom">
-      </div>
+      
       <div class="product-container">
-        <div class="image-wrapper">
+        <!-- <img src="/claquette.svg" width="100%"/> -->
+
+        <div class="image-wrapper"> 
           <VueDraggableResizable className="user-image" style="width:100%">
               <img ref="image" src="/iron-man.jpg" width="100%" :style="{ transform: `scale(${scale})`}"/>
           </VueDraggableResizable>
@@ -50,12 +55,21 @@
 
 .product-container {
   position: relative;
+  /* width: auto;
+  height: auto; */
   width: 600px;
   height: 400px;
   top: 50%;
   left: 50%;
   transform: translate(-50%,-50%);
-  clip-path: url("/product.svg#mask");
+  display: flex;
+  justify-content: center;
+  align-content: center;
+  /* clip-path: url("/product.svg#claquette"); */
+  mask-image: url(/claquette.svg);
+  mask-repeat: no-repeat;
+  mask-position: 50% 50%;
+  /* background: red; */
 }
 
 .slider {
@@ -63,6 +77,23 @@
 }
 
 .product-toolbar {
+  display: flex;
+  width: 100%;
+  position: absolute;
+  margin: 0;
+  padding: 10px;
+  z-index: 1000;
+  background: #212121;
+  border-bottom: 1px solid #424242;
+}
+
+.product-toolbar div {
+  
+}
+
+.product-toolbar div input {
+  margin: 0;
+  padding: 0;
 }
 
 .box {
@@ -107,6 +138,8 @@
   width: 100%;
   height: 100%;
   overscroll-behavior: none;
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
 }
 
 .viewport {
