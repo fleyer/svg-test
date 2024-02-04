@@ -7,8 +7,8 @@
   const defaultZoomIndex   = zooms.findIndex(v => v === 100);     
   const zoom               = ref(defaultZoomIndex); 
   const image = ref(null);
-  const scale = ref<number>(1)
-  const scaleComputed = computed(() => ((scale.value - 1) * 100 + 150 ))
+  const scale = ref<number>(150)
+  const scaleComputed = computed(() => Math.round((1 + ((scale.value - 150) / 150))* 100) / 100)
   const zoomFactor         = computed(() => zooms[zoom.value] / 100);
 
   function onScroll(e: any) : void {
@@ -20,43 +20,58 @@
   function onZoom(e : Event){
     const target  = e.target as HTMLInputElement
 
-    scale.value = 1 + (parseInt(target.value) - 150) / 100
+    // scale.value = Math.round((1 + (parseInt(target.value) - 150) / 150)*100) / 100
+    scale.value = parseInt(target.value)
   }
-
-  // https://stackoverflow.com/questions/19484707/how-can-i-make-an-svg-scale-with-its-parent-container
-
 </script>
 
 <template>
-  <div class="product-toolbar">
-    <div>
-      <input type="range" min="1" max="300" :value="scaleComputed" class="slider" id="myRange" :onInput="onZoom">
+  <div class="container">
+    <div class="product-toolbar">
+        <!-- <input type="number" step="0.1" :value="scaleComputed" disabled :style="{ width: '50px'}"> -->
+        <input type="range" min="1" max="300" :value="scale" class="slider" id="myRange" :onInput="onZoom">
+        <div>{{scaleComputed}}</div>
     </div>
-  </div>
-  <VueInfiniteViewer useWheelScroll=true class="view-infinite-viewer" :zoom="zoomFactor" @scroll="onScroll" @wheel="onScroll">
-    <div class="viewport">
-      
-      <div class="product-container">
-        <!-- <img src="/claquette.svg" width="100%"/> -->
+    <VueInfiniteViewer useWheelScroll=true class="view-infinite-viewer" :zoom="zoomFactor" @scroll="onScroll" @wheel="onScroll">
+      <div class="viewport">
+        
+        <div class="product-container">
 
-        <div class="image-wrapper"> 
-          <VueDraggableResizable className="user-image" style="width:100%">
-              <img ref="image" src="/iron-man.jpg" width="100%" :style="{ transform: `scale(${scale})`}"/>
-          </VueDraggableResizable>
+          <div class="image-wrapper"> 
+            <VueDraggableResizable className="user-image" style="width:100%">
+                <img ref="image" src="/iron-man.jpg" width="100%" :style="{ transform: `scale(${scaleComputed})`}"/>
+            </VueDraggableResizable>
+          </div>
+          <img class="image-footer" src="/handle.svg" width="100%"/>
         </div>
       </div>
-    </div>
-      
-  </VueInfiniteViewer>
+        
+    </VueInfiniteViewer>
+  </div>
 </template>
 
 <style>
 
+.view-infinite-viewer {
+  flex:1;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.image-footer {
+  position: absolute;
+  top: 100%;
+  right: 14px;
+  padding-top: 2px;
+}
 
 .product-container {
   position: relative;
-  /* width: auto;
-  height: auto; */
   width: 600px;
   height: 400px;
   top: 50%;
@@ -65,21 +80,12 @@
   display: flex;
   justify-content: center;
   align-content: center;
-  /* clip-path: url("/product.svg#claquette"); */
-  mask-image: url(/claquette.svg);
-  mask-repeat: no-repeat;
-  mask-position: 50% 50%;
-  /* background: red; */
-}
-
-.slider {
-  width: 100%;
 }
 
 .product-toolbar {
   display: flex;
+  align-items: center;
   width: 100%;
-  position: absolute;
   margin: 0;
   padding: 10px;
   z-index: 1000;
@@ -110,11 +116,15 @@
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background: #212121
+  background: #212121;
+  mask-image: url(/claquette.svg);
+  mask-repeat: no-repeat;
+  mask-position: 50% 50%;
 }
 
 .user-image {
   width: 100%;
+  cursor: pointer;;
 }
 
 .logo {
